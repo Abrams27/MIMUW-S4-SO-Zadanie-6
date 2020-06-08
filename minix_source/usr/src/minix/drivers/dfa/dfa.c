@@ -21,6 +21,7 @@ static int dfa_ioctl_dfaiocreject(unsigned long request, endpoint_t endpt, cp_gr
 static void make_move(char letter);
 static void create_id_string_for_index(int i);
 static int index_dfa(char i, char j);
+static void sef_init_fresh_call();
 
 static void sef_local_startup(void);
 static int sef_cb_init(int type, sef_init_info_t *info);
@@ -223,16 +224,7 @@ static int sef_cb_init(int type, sef_init_info_t *UNUSED(info)) {
 
   switch(type) {
     case SEF_INIT_FRESH:
-      dfa_state = dfa_q0;
-
-      for (int i = 0; i < DFA_SIZE * DFA_SIZE + 1; i++) {
-          transitions[i] = 0;
-      }
-
-      for (int i = 0; i < DFA_SIZE; i++) {
-        ending_state[i] = NO_ANSWER;
-      }
-
+      sef_init_fresh_call();
       break;
 
     case SEF_INIT_LU:
@@ -249,6 +241,18 @@ static int sef_cb_init(int type, sef_init_info_t *UNUSED(info)) {
   }
 
   return OK;
+}
+
+static void sef_init_fresh_call() {
+  dfa_state = dfa_q0;
+
+  for (int i = 0; i < DFA_SIZE * DFA_SIZE + 1; i++) {
+    transitions[i] = 0;
+  }
+
+  for (int i = 0; i < DFA_SIZE; i++) {
+    ending_state[i] = NO_ANSWER;
+  }
 }
 
 
